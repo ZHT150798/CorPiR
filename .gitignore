@@ -1,0 +1,27 @@
+# python
+__pycache__/
+*.pyc
+*.pyo
+
+# editors / os
+.idea/
+.vscode/
+.DS_Store
+
+# run outputs
+experiments/
+results/
+logs/
+tb_logger/
+checkpoint/
+wandb/
+
+# data
+*.lmdb
+
+# model weights (distributed via GitHub Releases, see README)
+pretrained/*
+!pretrained/README.md
+*.pth
+*.pth.tar
+*.ckpt

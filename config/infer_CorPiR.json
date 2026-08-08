@@ -1,0 +1,76 @@
+{
+    "name": "infer_CorPiR_X{scale}",
+    "phase": "val",
+    "scale": 4, // up-sampling factor: 2 | 4 | 8
+    "gpu_ids": [
+        0
+    ],
+    "path": {
+        "log": "logs",
+        "tb_logger": "tb_logger",
+        "results": "results",
+        "checkpoint": "checkpoint",
+        "resume_state": "./pretrained/corpir_x{scale}" // without the _gen.pth / _opt.pth suffix
+    },
+    "datasets": {
+        "val": {
+            "name": "PathoSR",
+            "dataroot": "/path/to/corpir_testset", // must contain a hr_<r_resolution> sub-folder
+            "datatype": "img",
+            "r_resolution": 128,
+            // "l_resolution": 32,   // optional, defaults to r_resolution / scale
+            "data_len": -1
+        }
+    },
+    "model": {
+        "finetune_norm": false,
+        "liif": {
+            "model_arch_name": "liif_edsr",
+            "in_channel": 3,
+            "out_channel": 3,
+            "encoder_channel": 64,
+            "model_weights_path": "./pretrained/liif_edsr_pathology.pth.tar",
+            "pretrained": true
+        },
+        "unet": {
+            "in_channel": 6,
+            "out_channel": 3,
+            "inner_channel": 64,
+            "channel_multiplier": [
+                1,
+                2,
+                4,
+                8,
+                8
+            ],
+            // "attn_res": [32],     // optional, defaults to [l_resolution]
+            "res_blocks": 2,
+            "dropout": 0.2
+        },
+        "beta_schedule": {
+            "train": {
+                "schedule": "linear",
+                "n_timestep": 2000,
+                "linear_start": 1e-6,
+                "linear_end": 1e-2
+            },
+            "val": {
+                "schedule": "linear",
+                "n_timestep": 2000,
+                "linear_start": 1e-6,
+                "linear_end": 1e-2
+            }
+        },
+        "diffusion": {
+            "channels": 3,
+            "conditional": true
+            // "image_size": 128,    // optional, defaults to r_resolution
+        },
+        "consistency_constraint": {
+            "last_steps": 400 // apply the consistency constraint to the last N denoising steps; must match the value used for training
+        }
+    },
+    "wandb": {
+        "project": "sr_Patho"
+    }
+}

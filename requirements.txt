@@ -1,0 +1,24 @@
+# CorPiR dependencies (pinned to the versions used for the results in the paper).
+#
+# torch/torchvision below are the CUDA 12.1 builds. To install them explicitly:
+#   pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu121
+# For a different CUDA version, pick the matching wheel from https://pytorch.org.
+
+torch==2.4.1
+torchvision==0.19.1
+
+numpy==2.1.1
+scipy==1.14.1
+opencv-python==4.10.0.84
+pillow==10.4.0
+einops==0.8.0
+lmdb==1.5.1
+tqdm==4.66.5
+
+# metrics: LPIPS for training/evaluation, pytorch-fid for the optional FID score
+lpips==0.1.4
+pytorch-fid==0.3.0
+
+# logging (optional at runtime, but imported unconditionally)
+tensorboardX==2.6.2.2
+wandb==0.18.2
